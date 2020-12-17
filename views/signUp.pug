@@ -1,0 +1,36 @@
+ 
+doctype html
+html
+  head
+    title= title
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css')
+    link(rel='stylesheet', href='/styles.css')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js')
+
+    style
+      include ../public/styles.css
+    body
+      .row.brown.lighten-5
+        .col.s12.m2
+          h1#logo.deep-orange.accent-2.black-text MJ
+        .col.s0.m0.l8
+          h1(style=" color: #ff6e40 ") MICROJUNK | SIGN UP
+
+    .container.brown.lighten-5.hoverable
+      .row
+        h3(style=" color: #000000 ") Sign Up
+        form(method="POST" action="/posts/signup")
+          .form-group.col.s10.offset-s1
+            label(for='username') Username
+            input#name.form-control(type='text' placeholder='Enter username here' name='signupuser')
+          .form-group.col.s10.offset-s1
+            label(for='pwd') Password
+            input#password.form-control(type='password' placeholder='Enter password here' name='signuppassword')
+          button.btn.deep-orange.accent-2.waves-effect.waves-light.black-text(type='submit') Sign Up
+          br
+          p
+
+    br
+    p © Markus Latvakoski 2020

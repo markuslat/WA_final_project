@@ -1,0 +1,31 @@
+body {
+  text-align: center;
+  font-family: Georgia;
+  background-image: url("tausta.JPG");
+}
+
+.container {
+  width: 500px;
+  align-content: center;
+  align-self: center;
+  text-align: center;
+}
+
+#logo {
+  font-family: Georgia;
+  font-size: 40px;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+  border-radius: 75%;
+}
+
+label {
+  font-family: Georgia;
+  font-weight: bold;
+}
+
+input {
+  font-family: Georgia;
+}
