@@ -1,17 +1,12 @@
-// Required libraries
+// Importing required libraries
 var express = require("express");
 var router = express.Router();
 var loggeduser;
-
-// Good validation documentation available at https://express-validator.github.io/docs/
 const { sanitizeBody } = require("express-validator");
 
-// Get posts listing
+// Rendering posts.pug view
 router.get("/", function (req, res, next) {
-  // Retreiving the posts from the global var
   var data = req.app.get("poststore");
-
-  // Just send the array of objects to the browser
   res.render("posts", {
     title: "Post List",
     post_list: data
@@ -24,50 +19,48 @@ router.post("/create", sanitizeBody("*").trim().escape(), function (
   res,
   next
 ) {
-  var local_content = req.body.content;
-  var local_author = loggeduser;
+  var content = req.body.content;
+  var author = loggeduser;
   var date = new Date();
-  var hour = date.getHours() + 2;
   var minute = date.getMinutes();
-  var second = date.getSeconds();
+  var hour = date.getHours() + 2;
   var day = date.getDate();
   var month = date.getMonth() + 1;
   var year = date.getFullYear();
+  var hour2 = hour;
+  var minute2 = minute;
 
-  var tunti = String(hour);
-
-  if (tunti === "24") {
+  // Fixing formations
+  if (hour2 === 24) {
     hour = "00";
   }
-  if (tunti === "25") {
+  if (hour2 === 25) {
     hour = "01";
   }
-  var minuutti = String(minute);
-
-  if (minuutti.length === 1) {
-    minute = "0" + minuutti;
+  if (minute2 < 10) {
+    minute = "0" + minute2;
   }
+  var postingTime = hour + ":" + minute;
+  var date2 = day + "." + month + "." + year;
 
-  var sekuntti = String(second);
+  console.log(
+    "New contentfrom author " +
+      author +
+      ":" +
+      content +
+      " Time: " +
+      postingTime,
+    date2
+  );
 
-  if (sekuntti.length === 1) {
-    second = "0" + sekuntti;
-  }
-
-  var time = hour + ":" + minute;
-  var date1 = day + "." + month + "." + year;
-
-  console.log("We got content: " + local_content);
-  console.log("from author: " + local_author);
-  console.log("Time: " + time, date1);
-
-  if (local_content.length <= 280) {
-    if (local_content !== "") {
+  // Adding the post to the poststore
+  if (content.length <= 280) {
+    if (content !== "") {
       req.app.get("poststore").unshift({
-        author: local_author,
-        content: local_content,
-        time: time,
-        date: date1
+        author: author,
+        content: content,
+        time: postingTime,
+        date: date2
       });
       console.log("Post added.");
 
@@ -78,12 +71,26 @@ router.post("/create", sanitizeBody("*").trim().escape(), function (
   }
 });
 
-router.post("/logout", sanitizeBody("*").trim().escape(), function (
+router.post("/signup", sanitizeBody("*").trim().escape(), function (
   req,
   res,
   next
 ) {
-  res.redirect("/");
+  var user = req.body.signupuser;
+  var password = req.body.signuppassword;
+
+  // Saving username and password to the userstore
+  if (user && password !== "") {
+    console.log(user + " signed up.");
+    req.app.get("userstore").push({
+      user: user,
+      pass: password
+    });
+    res.redirect("/");
+  } else {
+    console.log("Fill all fields.");
+    res.redirect("/signup");
+  }
 });
 
 router.post("/login", sanitizeBody("*").trim().escape(), function (
@@ -92,14 +99,15 @@ router.post("/login", sanitizeBody("*").trim().escape(), function (
   next
 ) {
   var users = req.app.get("userstore");
-  var local_user = req.body.loginuser;
-  var local_password = req.body.loginpassword;
+  var user = req.body.loginuser;
+  var password = req.body.loginpassword;
   var counter = 0;
 
+  // If username and password matches to the existing ones, the user is admitted
   for (var i = 0; i < users.length; i++) {
     console.log(users[i].user);
-    if (users[i].user === local_user) {
-      if (users[i].pass === local_password) {
+    if (users[i].user === user) {
+      if (users[i].pass === password) {
         loggeduser = users[i].user;
         counter = 1;
       }
@@ -111,29 +119,16 @@ router.post("/login", sanitizeBody("*").trim().escape(), function (
     res.redirect("/");
   } else {
     res.redirect("/posts");
-    console.log(local_user + " Logged in");
+    console.log(user + " Logged in");
   }
 });
 
-router.post("/signup", sanitizeBody("*").trim().escape(), function (
+router.post("/logout", sanitizeBody("*").trim().escape(), function (
   req,
   res,
   next
 ) {
-  var local_user = req.body.signupuser;
-  var local_password = req.body.signuppassword;
-
-  if (local_user && local_password !== "") {
-    console.log(local_user + " signed up.");
-    req.app.get("userstore").push({
-      user: local_user,
-      pass: local_password
-    });
-    res.redirect("/");
-  } else {
-    console.log("Fill all fields.");
-    res.redirect("/signup");
-  }
+  res.redirect("/");
 });
 
 module.exports = router;

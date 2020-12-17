@@ -1,9 +1,13 @@
+// Author: Markus Latvakoski
+// Web applications final project
+
+//////////////////////////////////////////////////////////
+
 var express = require("express");
 var router = express.Router();
 
-/*GET home page. */
+// Rendering index.js (log in view)
 router.get("/", function (req, res, next) {
-  // Retreiving the posts from the global var
   var post_list = req.app.get("poststore");
 
   res.render("index", {
@@ -12,7 +16,7 @@ router.get("/", function (req, res, next) {
   });
 });
 
-/*GET sign up page. */
+// GET sign up page
 router.post("/getin", function (req, res, next) {
   res.redirect("/signup");
 });

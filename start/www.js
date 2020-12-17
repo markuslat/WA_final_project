@@ -1,5 +1,4 @@
 // Default content genrated by express-generator
-// Not necessary to edit
 
 /**
  * Module dependencies.
